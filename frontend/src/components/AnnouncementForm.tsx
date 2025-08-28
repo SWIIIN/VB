@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Package, MapPin, Calendar, DollarSign, FileText, AlertCircle, CheckCircle } from 'lucide-react';
+import { X, Package, AlertCircle, CheckCircle } from 'lucide-react';
 import { MOROCCAN_CITIES, PACKAGE_TYPES, APP_LIMITS, ERROR_MESSAGES } from '../constants';
 
 interface AnnouncementFormProps {
@@ -8,7 +8,7 @@ interface AnnouncementFormProps {
   onSubmit: (announcement: AnnouncementData) => Promise<void>;
 }
 
-interface AnnouncementData {
+export interface AnnouncementData {
   title: string;
   description: string;
   departure: string;

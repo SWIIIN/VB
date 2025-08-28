@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AnnouncementForm from '../components/AnnouncementForm';
+import { AnnouncementData } from '../components/AnnouncementForm';
 import { Search, Filter, MapPin, Package, Calendar, User, Star } from 'lucide-react';
 import { MOROCCAN_CITIES, PACKAGE_TYPES, PRICE_RANGES } from '../constants';
 
@@ -32,10 +33,27 @@ const Annonces = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   // Ajout d'une annonce
-  const handleCreateAnnouncement = async (announcementData: any) => {
-    // Ici, vous pouvez envoyer l'annonce à l'API si besoin
-    setAnnouncements(prev => [announcementData, ...prev]);
-    setFilteredAnnouncements(prev => [announcementData, ...prev]);
+  const handleCreateAnnouncement = async (announcementData: AnnouncementData) => {
+    // Transformation AnnouncementData -> Announcement
+    const newAnnouncement: Announcement = {
+      id: Math.random().toString(36).substr(2, 9),
+      title: announcementData.title,
+      description: announcementData.description,
+      origin: announcementData.departure,
+      destination: announcementData.arrival,
+      packageType: announcementData.packageType,
+      weight: announcementData.weight,
+      price: announcementData.price,
+      date: announcementData.date,
+      shipper: {
+        name: 'Utilisateur',
+        rating: 5,
+        reviews: 1
+      },
+      status: 'active'
+    };
+    setAnnouncements(prev => [newAnnouncement, ...prev]);
+    setFilteredAnnouncements(prev => [newAnnouncement, ...prev]);
     setIsFormOpen(false);
   };
 
@@ -85,7 +103,7 @@ const Annonces = () => {
     if (selectedPriceRange) {
       const [min, max] = selectedPriceRange.split('-').map(Number);
       filtered = filtered.filter(announcement => 
-        announcement.price >= min && (max ? announcement.price <= max : true)
+        announcement.price >= (min ?? 0) && (max ? announcement.price <= max : true)
       );
     }
 
@@ -296,8 +314,8 @@ const Annonces = () => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center space-x-2">
                     <User className="h-4 w-4 text-gray-400" />
-                    <span className="text-sm text-gray-600">{announcement.shipper?.name || '—'}</span>
-                    {announcement.shipper && (
+                    <span className="text-sm text-gray-600">{announcement.shipper && announcement.shipper.name ? announcement.shipper.name : '—'}</span>
+                    {announcement.shipper && typeof announcement.shipper.rating === 'number' && typeof announcement.shipper.reviews === 'number' && (
                       <div className="flex items-center space-x-1">
                         <Star className="h-3 w-3 text-yellow-400 fill-current" />
                         <span className="text-xs text-gray-600">{announcement.shipper.rating}</span>
