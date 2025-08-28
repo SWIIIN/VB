@@ -61,7 +61,7 @@ const Annonces = () => {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/announcements`);
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/announcements`);
         if (!response.ok) throw new Error('Erreur lors du chargement des annonces');
         const data = await response.json();
         setAnnouncements(Array.isArray(data) ? data : []);
